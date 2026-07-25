@@ -27,7 +27,7 @@ function App() {
         id: crypto.randomUUID(),
         titulo: datosFormulario.titulo.trim(),
         descripcion: datosFormulario.descripcion.trim(),
-        completadoHoy: false,
+        fechasCompletado: [],
       };
       setHabitos((prevHabitos) => [...prevHabitos, habitoNuevo]);
       setFormularioHabito({
@@ -43,11 +43,18 @@ function App() {
     );
   };
 
+  const fechaHoy = new Date().toISOString().split("T")[0];
+
   const marcarCompletado = (id) => {
     setHabitos((prevHabitos) =>
       prevHabitos.map((habito) =>
         habito.id === id
-          ? { ...habito, completadoHoy: !habito.completadoHoy }
+          ? {
+              ...habito,
+              fechasCompletado: habito.fechasCompletado.includes(fechaHoy)
+                ? habito.fechasCompletado.filter((fecha) => fecha !== fechaHoy)
+                : [...habito.fechasCompletado, fechaHoy],
+            }
           : habito,
       ),
     );
@@ -106,7 +113,7 @@ function App() {
           <div
             key={habito.id}
             className={`flex justify-between items-center border rounded-xl p-4 shadow-lg transition-colors ${
-              habito.completadoHoy
+              habito.fechasCompletado.includes(fechaHoy)
                 ? "bg-slate-800/50 border-slate-800"
                 : "bg-slate-800 border-slate-700"
             }`}
@@ -114,7 +121,7 @@ function App() {
             <div className="flex flex-col gap-1">
               <h2
                 className={`font-semibold ${
-                  habito.completadoHoy
+                  habito.fechasCompletado.includes(fechaHoy)
                     ? "text-slate-500 line-through"
                     : "text-slate-100"
                 }`}
@@ -127,14 +134,14 @@ function App() {
               <button
                 onClick={() => marcarCompletado(habito.id)}
                 type="button"
-                aria-pressed={habito.completadoHoy}
+                aria-pressed={habito.fechasCompletado.includes(fechaHoy)}
                 title={
-                  habito.completadoHoy
+                  habito.fechasCompletado.includes(fechaHoy)
                     ? "Marcar como pendiente"
                     : "Marcar como completado"
                 }
                 className={`p-2 rounded-full border transition-colors ${
-                  habito.completadoHoy
+                  habito.fechasCompletado.includes(fechaHoy)
                     ? "bg-emerald-500 border-emerald-500 text-white hover:bg-emerald-400"
                     : "bg-transparent border-slate-600 text-slate-500 hover:border-emerald-400 hover:text-emerald-400"
                 }`}
