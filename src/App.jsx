@@ -60,6 +60,24 @@ function App() {
     );
   };
 
+  const calcularRacha = (fechasCompletado) => {
+    let racha = 0;
+    let fechaEvaluar = new Date();
+    let fechaString = fechaEvaluar.toISOString().split("T")[0];
+
+    if (!fechasCompletado.includes(fechaString)) {
+      fechaEvaluar.setDate(fechaEvaluar.getDate() - 1);
+      fechaString = fechaEvaluar.toISOString().split("T")[0];
+    }
+
+    while (fechasCompletado.includes(fechaString)) {
+      racha++;
+      fechaEvaluar.setDate(fechaEvaluar.getDate() - 1);
+      fechaString = fechaEvaluar.toISOString().split("T")[0];
+    }
+    return racha;
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10 text-slate-100">
       <div>
@@ -158,6 +176,43 @@ function App() {
             </div>
           </div>
         ))}
+      </div>
+      <div>
+        <h1 className="text-2xl font-bold mt-10 mb-4 text-slate-100">
+          Total completados
+        </h1>
+        <div className="flex flex-col gap-3">
+          {habitos.map((habito) => {
+            const rachaActual = calcularRacha(habito.fechasCompletado);
+
+            return (
+              <div
+                key={habito.id}
+                className="flex justify-between items-center bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg"
+              >
+                <div className="flex flex-col gap-1">
+                  <p className="font-semibold text-slate-100">
+                    {habito.titulo}
+                  </p>
+                  <p className="text-sm text-slate-400">{habito.descripcion}</p>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-sm text-slate-400">
+                    {habito.fechasCompletado.length} días totales
+                  </p>
+
+                  {rachaActual > 0 && (
+                    <p className="text-sm font-medium text-orange-400 animate-pulse">
+                      🔥 {rachaActual} {rachaActual === 1 ? "día" : "días"} de
+                      racha
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
