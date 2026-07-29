@@ -61,6 +61,16 @@ function App() {
     );
   };
 
+  const editarHabito = (idHabito, tituloNuevo, descripcionNueva) => {
+    setHabitos((prevHabitos) =>
+      prevHabitos.map((habito) =>
+        habito.id === idHabito
+          ? { ...habito, titulo: tituloNuevo, descripcion: descripcionNueva }
+          : habito,
+      ),
+    );
+  };
+
   const calcularRacha = (fechasCompletado) => {
     let racha = 0;
     let fechaEvaluar = new Date();
@@ -90,7 +100,7 @@ function App() {
           className="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col gap-3 shadow-lg"
         >
           <h2 className="text-lg font-semibold text-slate-100">
-            Agregar habito
+            Agregar hábito
           </h2>
           <input
             value={formularioHabito.titulo}
@@ -125,7 +135,7 @@ function App() {
         </form>
       </div>
       <h1 className="text-2xl font-bold mt-10 mb-4 text-slate-100">
-        Mis habitos
+        Mis hábitos
       </h1>
       <div className="flex flex-col gap-3">
         {habitos.map((habito) => (
@@ -135,6 +145,7 @@ function App() {
             fechaHoy={fechaHoy}
             onCompletar={marcarCompletado}
             onEliminar={eliminarHabito}
+            onEditar={editarHabito}
             calcularRacha={calcularRacha}
           />
         ))}
