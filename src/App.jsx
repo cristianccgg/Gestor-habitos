@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Trash2, Check } from "lucide-react";
 import Habito from "./components/Habito";
 
 function App() {
